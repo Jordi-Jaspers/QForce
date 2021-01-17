@@ -152,7 +152,7 @@ public class PersonServiceModel implements PersonService{
      * @param movieURLs a list with the SWAPI URL of the different movies
      * @return a list of movies
      */
-    private List<Movie> loadMovies(List<String> movieURLs) {
+    private List<Movie> loadMovies(List<String> movieURLs) throws JsonProcessingException {
         List<Movie> movies = new ArrayList<>();
 
         for (String movieURL : movieURLs) {
