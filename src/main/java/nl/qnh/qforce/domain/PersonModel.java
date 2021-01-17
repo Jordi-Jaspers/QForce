@@ -32,10 +32,8 @@ public class PersonModel implements Person{
     @JsonProperty("mass")
     private Integer weight;
 
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY, value = "films")
-    private List<String> filmsUrl;
-
     private List<Movie> movies;
+    private List<String> moviesURLs;
 
     /**
      * the constructor to create these characters
@@ -129,21 +127,21 @@ public class PersonModel implements Person{
     }
 
     /**
-     * returns all the URL's of the original movies it played in.
-     *
-     * @return list of Movie URLs
-     */
-    public List<String> getFilmsUrl() {
-        return filmsUrl;
-    }
-
-    /**
      * Puts all the movies in a list.
      *
      * @param movies list of movies it played in.
      */
     public void setMovies(List<Movie> movies) {
         this.movies = movies;
+    }
+
+    /**
+     * Puts all the movies in a list.
+     *
+     * @param moviesURLs list of movies it played in.
+     */
+    public void getMoviesURL(List<String> moviesURLs) {
+        this.moviesURLs = moviesURLs;
     }
 
     /**
@@ -159,7 +157,7 @@ public class PersonModel implements Person{
                 ", gender =" + gender +
                 ", height =" + height +
                 ", weight =" + weight +
-                ", movies =" + movies +
+                ", movies {" + movies +
                 "}";
     }
 
