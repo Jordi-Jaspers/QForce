@@ -3,6 +3,8 @@
 The QForce REST API returns Star Wars characters.
 It uses the https://swapi.co/ to retrieve the actual Star Wars characters.
 
+Website changed from https://swapi.co/ to https://swapi.dev/
+
 ## Objective
 
 Create a REST endpoint to search Star Wars characters by name or retrieve them by id.
