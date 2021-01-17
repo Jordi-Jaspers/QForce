@@ -37,7 +37,7 @@ public class PersonServiceModel implements PersonService{
 
     //object mapper is used to map the JSON values into JAVA Object.
     private final ObjectMapper objectMapper;
-    private RestTemplate restTemplate;
+    private final RestTemplate restTemplate;
 
     @Autowired
     public PersonServiceModel(RestTemplate restTemplate, ObjectMapper objectMapper) {
@@ -80,8 +80,7 @@ public class PersonServiceModel implements PersonService{
 
                     //get all the characters that contain something in the query
                     if(query != null){
-                        String str = query;
-                        if (str.trim().length() == 0) {
+                        if (query.trim().length() == 0) {
                             log.warn("string only contains whitespace");
                             break;
                         }
@@ -124,7 +123,7 @@ public class PersonServiceModel implements PersonService{
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         //TODO: Adding header specifics? how?
         HttpEntity<String> entity = new HttpEntity<>("parameters", headers);
-        ResponseEntity<String> response = restTemplate.exchange(GET_PEOPLE + "id", HttpMethod.GET, entity, String.class);
+        ResponseEntity<String> response = restTemplate.exchange(GET_PEOPLE + id, HttpMethod.GET, entity, String.class);
 
         PersonModel person;
 
