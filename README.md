@@ -1,9 +1,9 @@
 # QForce
 
 The QForce REST API returns Star Wars characters.
-It uses the https://swapi.co/ to retrieve the actual Star Wars characters.
+It uses the <https://swapi.co/> to retrieve the actual Star Wars characters.
 
-Website changed from https://swapi.co/ to https://swapi.dev/
+Website changed from <https://swapi.co/> to <https://swapi.dev/>
 
 ## Objective
 
@@ -18,7 +18,7 @@ The search endpoint should return a list of `Person` resources.
 
 The `Person` resource should look like:
 
-```
+```JAVA
 {
   "id": 1,
   "name": "Luke Skywalker",
@@ -43,17 +43,29 @@ The get endpoint should return a single `Person` resource and if the id does not
 
 The api should write analytics to a (embedded) database to keep track how many times the api is called.
 
-
 ## Requirements / Objectives
 
 * Fork this project.
 * Setup a decent build environment (Maven or Gradle).
 * Use Spring framework and Spring MVC in particular. Spring Boot recommended.
 * The project should use the `nl.qnh.qforce.domain` and `nl.qnh.qforce.service` interfaces. Implementations must be developed and these interfaces may not be changed.
-* The https://swapi.co/ must be used to retrieve the external people data.
-* Jackson object mapper (https://github.com/FasterXML/jackson) should be used for marshalling and unmarshalling JSON.
+* The <https://swapi.co/> must be used to retrieve the external people data.
+* Jackson object mapper (<https://github.com/FasterXML/jackson>) should be used for marshalling and unmarshalling JSON.
 * The QForce api should return the JSON data in snake case format.
 * Unit and integration tests should be written.
 * An embedded database (e.g. H2) should be used for storing the analytics.
-* Implementation decisions need to be documented in the Javadocs. 
+* Implementation decisions need to be documented in the Javadocs.
 
+## Bugs
+
+* Get-request are not working
+* Adding header specifics maybe?
+
+## TODO list
+
+* Create models for the interface blueprints - Done!
+* Make a simple GET-request from <https://swapi.dev/>
+* print out the GET-request into a log.
+* Transform the JSON to JAVA objects with Jackson Object mapper.
+* Create all the JAVADOC
+* Make Unit and integration tests

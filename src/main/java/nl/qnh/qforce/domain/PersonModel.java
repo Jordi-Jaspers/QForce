@@ -1,9 +1,10 @@
 package nl.qnh.qforce.domain;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import java.util.List;
 
 /**
  * Main Object class of character in the star wars movies.
@@ -32,8 +33,11 @@ public class PersonModel implements Person{
     @JsonProperty("mass")
     private Integer weight;
 
-    private List<Movie> movies;
+    @JsonProperty("films")
     private List<String> moviesURLs;
+
+    private List<Movie> movies;
+
 
     /**
      * the constructor to create these characters
@@ -46,14 +50,14 @@ public class PersonModel implements Person{
      * @param weight the weight of the person
      * @param movies the movies the person has been in
      */
-    public PersonModel(long id, String name, String birthYear, Gender gender, Integer height, Integer weight, List<Movie> movies) {
+    public PersonModel(long id, String name, String birthYear, Gender gender, Integer height, Integer weight, List<String> moviesURLs) {
         this.id = id;
         this.name = name;
         this.birthYear = birthYear;
         this.gender = gender;
         this.height = height;
         this.weight = weight;
-        this.movies = movies;
+        this.moviesURLs = moviesURLs;
     }
 
     /**
@@ -136,12 +140,12 @@ public class PersonModel implements Person{
     }
 
     /**
-     * Puts all the movies in a list.
+     * Puts all the movie urls in a list.
      *
-     * @param moviesURLs list of movies it played in.
+     * @param moviesURLs list of movies it played in URL format.
      */
-    public void getMoviesURL(List<String> moviesURLs) {
-        this.moviesURLs = moviesURLs;
+    public List<String> getMoviesURL() {
+        return moviesURLs;
     }
 
     /**

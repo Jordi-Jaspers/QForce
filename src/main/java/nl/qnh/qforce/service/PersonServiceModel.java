@@ -1,25 +1,30 @@
 package nl.qnh.qforce.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import nl.qnh.qforce.QforceApplication;
-import nl.qnh.qforce.domain.Movie;
-import nl.qnh.qforce.domain.MovieModel;
-import nl.qnh.qforce.domain.Person;
-import nl.qnh.qforce.domain.PersonModel;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.*;
-import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+import nl.qnh.qforce.QforceApplication;
+import nl.qnh.qforce.domain.Movie;
+import nl.qnh.qforce.domain.MovieModel;
+import nl.qnh.qforce.domain.Person;
+import nl.qnh.qforce.domain.PersonModel;
+import nl.qnh.qforce.domain.PersonModelList;
 
 /**
  * The service file is the blueprint of the methods we are providing.
@@ -33,7 +38,6 @@ public class PersonServiceModel implements PersonService{
     private static final Logger log = LoggerFactory.getLogger(QforceApplication.class);
 
     private static final String GET_PEOPLE = "https://swapi.dev/api/people/";
-    private static final String GET_MOVIES = "https://swapi.dev/api/films/";
 
     //object mapper is used to map the JSON values into JAVA Object.
     private final ObjectMapper objectMapper;
@@ -57,18 +61,12 @@ public class PersonServiceModel implements PersonService{
      * @return list of people with the query
      */
     private List<Person> getPeople(String query) {
-        // Create headers
-        HttpHeaders headers = new HttpHeaders();
-        // set `accept` header
-        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-        //TODO: Adding header specifics? how?
-        HttpEntity<String> entity = new HttpEntity<>("parameters", headers);
-        ResponseEntity<String> response = restTemplate.exchange(GET_PEOPLE, HttpMethod.GET, entity, String.class);
+        ResponseEntity<String> response = restTemplate.exchange(GET_PEOPLE, HttpMethod.GET, getHttpEntity(), String.class);
 
         List<Person> people = new ArrayList<>();
         try {
             //ERROR: what is wrong here?
-            List<PersonModel> results = objectMapper.readValue(response.getBody(), PersonModel.class);
+            PersonModelList results = objectMapper.readValue(response.getBody(), PersonModelList.class);
 
             if(results == null){
                 //Return an empty list
@@ -76,7 +74,7 @@ public class PersonServiceModel implements PersonService{
             }
             else{
                 //Using final keyword because a variable holds a constant value or a reference
-                for (final PersonModel person : results) {
+                for (final PersonModel person : results.getResults()) {
 
                     //get all the characters that contain something in the query
                     if(query != null){
@@ -86,9 +84,8 @@ public class PersonServiceModel implements PersonService{
                         }
                         else if (person.getName().contains(query)) {
                             log.warn("Found Result: " + person.getName());
-                            //TODO: add to list
-                            //people.add(person);
-
+                            person.setMovies(loadMovies(person.getMoviesURL()));
+                            people.add(person);
                         }
                         else{
                             continue;
@@ -117,13 +114,7 @@ public class PersonServiceModel implements PersonService{
      * @return star wars character with id
      */
     private Optional<Person> getPerson(long id) {
-        // Create headers
-        HttpHeaders headers = new HttpHeaders();
-        // set `accept` header
-        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-        //TODO: Adding header specifics? how?
-        HttpEntity<String> entity = new HttpEntity<>("parameters", headers);
-        ResponseEntity<String> response = restTemplate.exchange(GET_PEOPLE + id, HttpMethod.GET, entity, String.class);
+        ResponseEntity<String> response = restTemplate.exchange(GET_PEOPLE + id, HttpMethod.GET, getHttpEntity(), String.class);
 
         PersonModel person;
 
@@ -151,22 +142,39 @@ public class PersonServiceModel implements PersonService{
      * @param movieURLs a list with the SWAPI URL of the different movies
      * @return a list of movies
      */
-    private List<Movie> loadMovies(List<String> movieURLs) throws JsonProcessingException {
+    private List<Movie> loadMovies(List<String> movieURLs) {
         List<Movie> movies = new ArrayList<>();
 
         for (String movieURL : movieURLs) {
-            // Create headers
-            HttpHeaders headers = new HttpHeaders();
-            // set `accept` header
-            headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-            //TODO: Adding header specifics? how?
-            HttpEntity<String> entity = new HttpEntity<>("parameters", headers);
-            ResponseEntity<String> response = restTemplate.exchange(movieURL, HttpMethod.GET, entity, String.class);
+            ResponseEntity<String> response = restTemplate.exchange(movieURL, HttpMethod.GET, getHttpEntity(), String.class);
 
-            MovieModel movie = objectMapper.readValue(response.getBody(), MovieModel.class);
-            movies.add(movie);
+            try {
+                MovieModel movie = objectMapper.readValue(response.getBody(), MovieModel.class);
+                movies.add(movie);
+            } catch (JsonProcessingException e) {
+                log.error(e.getMessage(), e.getCause());
+                log.error("Error: LoadMovies() method ");
+                return new ArrayList<>();
+            }
+            
         }
         return movies;
+    }
+    
+    /**
+     * Method to create an correct API entity for the GET-calls.
+     * 
+     * @return the correct entity to make API calls
+     */
+    private HttpEntity<String> getHttpEntity(){
+        // Create headers
+        HttpHeaders headers = new HttpHeaders();
+        // set `accept` header
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+        //Adding header specifics maybe?
+        HttpEntity<String> entity = new HttpEntity<>("parameters", headers);
+
+        return entity;
     }
 
 }
