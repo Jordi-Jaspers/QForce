@@ -62,21 +62,21 @@ public class PersonServiceModel implements PersonService {
      */
     private List<Person> getPeople(String query) {
         log.info("Getting people response");
-        ResponseEntity<String> response = restTemplate.exchange(GET_PEOPLE, HttpMethod.GET, getHttpEntity(),
-                String.class);
-        log.info("response: " + response);
+        ResponseEntity<String> response = restTemplate.exchange(GET_PEOPLE, HttpMethod.GET, getHttpEntity(), String.class);
+        log.info("response code: " + response.getStatusCode());
 
         List<Person> people = new ArrayList<>();
 
         try {
             PersonModelList results = objectMapper.readValue(response.getBody(), PersonModelList.class);
-            log.info("results: " + results);
+            log.info("results: " + results.getResults());
 
             if (results == null) {
                 log.info("Results empty: Returning empty list");
                 return new ArrayList<>();
             } else {
                 // Using final keyword because a variable holds a constant value or a reference
+                log.info("itterating through the results");
                 for (final PersonModel person : results.getResults()) {
 
                     // get all the characters that contain something in the query
@@ -84,7 +84,7 @@ public class PersonServiceModel implements PersonService {
                         if (query.trim().length() == 0) {
                             log.info("string only contains whitespace");
                             break;
-                        } else if (person.getName().contains(query)) {
+                        } else if (person.getName().regionMatches(true, 0, query, 0, query.length())) {
                             log.info("Found Result: " + person.getName());
 
                             //getting the id by splitting the url and taking the last element
@@ -94,12 +94,14 @@ public class PersonServiceModel implements PersonService {
                             //setting the movies into the person
                             person.setMovies(loadMovies(person.getMoviesURL()));
                             people.add(person);
-                        } else {
+                        }
+                        else{
                             continue;
                         }
                     }
 
                 }
+                log.info("people: " + people);
                 return people;
             }
         } catch (JsonProcessingException e) {
@@ -123,7 +125,7 @@ public class PersonServiceModel implements PersonService {
     private Optional<Person> getPerson(long id) {
         log.info("Getting people response");
         ResponseEntity<String> response = restTemplate.exchange(GET_PEOPLE + id, HttpMethod.GET, getHttpEntity(), String.class);
-        log.info("response: " +  response);
+        log.info("response code: " +  response.getStatusCode());
 
         PersonModel person;
 
@@ -133,8 +135,7 @@ public class PersonServiceModel implements PersonService {
             if (person == null) {
                 log.info("No person found: Object empty");
                 return Optional.empty();
-            }
-            else{
+            } else {
                 log.info("Person found: Correct id -> " + id);
                 person.setId(id);
 
@@ -153,6 +154,7 @@ public class PersonServiceModel implements PersonService {
 
     /**
      * method to convert a list of movie urls to movie objects
+     * 
      * @param movieURLs a list with the SWAPI URL of the different movies
      * @return a list of movies
      */
@@ -160,9 +162,9 @@ public class PersonServiceModel implements PersonService {
         List<Movie> movies = new ArrayList<>();
 
         for (String movieURL : movieURLs) {
-            log.info("Getting movie response");
+            log.info("Getting movie response: " + movieURL);
             ResponseEntity<String> response = restTemplate.exchange(movieURL, HttpMethod.GET, getHttpEntity(), String.class);
-            log.info("response:" +  response);
+            log.info("response code: " + response.getStatusCode());
 
             try {
                 if(response == null){
