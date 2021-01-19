@@ -43,12 +43,21 @@ public class PersonServiceModel implements PersonService {
     private final ObjectMapper objectMapper;
     private final RestTemplate restTemplate;
 
+    /**
+     * Wire the beans of restTemplate for the body and the JSON object mapper to this model in the constructor.
+     * 
+     * @param restTemplate restTemplate of the service
+     * @param objectMapper Jackson Object mapper.
+     */
     @Autowired
     public PersonServiceModel(RestTemplate restTemplate, ObjectMapper objectMapper) {
         this.restTemplate = restTemplate;
         this.objectMapper = objectMapper;
     }
 
+    /**
+     * Start the method to return a search request with query.
+     */
     @Override
     public List<Person> search(String query) {
         return getPeople(query);
@@ -111,6 +120,9 @@ public class PersonServiceModel implements PersonService {
         }
     }
 
+    /**
+     * Start the method to return a specified person with id.
+     */
     @Override
     public Optional<Person> get(long id) {
         return getPerson(id);

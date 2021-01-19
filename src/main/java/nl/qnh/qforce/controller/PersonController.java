@@ -31,11 +31,22 @@ public class PersonController {
 
     private static final Logger log = LoggerFactory.getLogger(QforceApplication.class);
 
+    /**
+     * wiring the service bean to the controller in the constructor.
+     * 
+     * @param personService
+     */
     @Autowired
     public PersonController(PersonService personService) {
         this.personService = personService;
     }
 
+    /**
+     * The mapping to start the get ID service in the API.
+     * 
+     * @param id the id of the person
+     * @return optional person if the id exists
+     */
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ResponseBody
     public Optional<Person> getPerson(@PathVariable long id){
@@ -43,6 +54,12 @@ public class PersonController {
         return personService.get(id);
     }
 
+    /**
+     * The mapping to start the search service in the API.
+     * 
+     * @param query search parameter
+     * @return list of persons containing the query
+     */
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
     public List<Person> getQuery(@RequestParam(value = "q") String query){
