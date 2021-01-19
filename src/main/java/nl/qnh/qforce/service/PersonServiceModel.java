@@ -87,6 +87,9 @@ public class PersonServiceModel implements PersonService{
                         }
                         else if (person.getName().contains(query)) {
                             log.info("Found Result: " + person.getName());
+
+                            //set the id of the person.
+
                             person.setMovies(loadMovies(person.getMoviesURL()));
                             people.add(person);
                         }
@@ -132,8 +135,11 @@ public class PersonServiceModel implements PersonService{
             }
             else{
                 log.info("Person found: Correct id -> " + id);
+                person.setId(id);
+
                 log.info("Adding movies from the URLs into the person object");
                 person.setMovies(loadMovies(person.getMoviesURL()));
+                
                 return Optional.of(person);
             }
 
@@ -192,6 +198,10 @@ public class PersonServiceModel implements PersonService{
 
         log.info("Creating HTTP request entity");
         return entity;
+    }
+
+    private long getPersonId(){
+
     }
 
 }

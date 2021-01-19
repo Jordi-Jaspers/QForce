@@ -11,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
  *
  * @author jordi
  */
-@JsonPropertyOrder({ "id", "name", "birth_year", "gender", "height", "weight", "movies" })
+@JsonPropertyOrder({ "id", "name", "birth_year", "gender", "height", "weight", "movies", "url" })
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PersonModel implements Person{
 
@@ -36,6 +36,9 @@ public class PersonModel implements Person{
     @JsonProperty("films")
     private List<String> moviesURLs;
 
+    @JsonProperty("url")
+    private String personalUrl;
+
     private List<Movie> movies;
 
      /**
@@ -54,7 +57,7 @@ public class PersonModel implements Person{
      * @param weight the weight of the person
      * @param movies the movies the person has been in
      */
-    public PersonModel(long id, String name, String birthYear, Gender gender, Integer height, Integer weight, List<String> moviesURLs) {
+    public PersonModel(long id, String name, String birthYear, Gender gender, Integer height, Integer weight, List<String> moviesURLs, String personalUrl) {
         this.id = id;
         this.name = name;
         this.birthYear = birthYear;
@@ -62,6 +65,7 @@ public class PersonModel implements Person{
         this.height = height;
         this.weight = weight;
         this.moviesURLs = moviesURLs;
+        this.personalUrl = personalUrl;
     }
 
     /**
@@ -82,7 +86,6 @@ public class PersonModel implements Person{
     public void setId(long id) {
         this.id = id;
     }
-    
 
     /**
      * Retuns the name of the person.
@@ -160,6 +163,15 @@ public class PersonModel implements Person{
      */
     public List<String> getMoviesURL() {
         return moviesURLs;
+    }
+
+    /**
+     * Retuns the url of the person in String format.
+     *
+     * @return the url of the person
+     */
+    public String getPersonalUrl() {
+        return personalUrl;
     }
 
     /**
