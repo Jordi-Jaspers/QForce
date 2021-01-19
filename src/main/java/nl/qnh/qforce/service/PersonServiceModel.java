@@ -18,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import nl.qnh.qforce.domain.Movie;
@@ -139,17 +140,19 @@ public class PersonServiceModel implements PersonService {
      * @return star wars character with id
      */
     private Optional<Person> getPerson(long id) {
-        log.info("Getting person response");
-        ResponseEntity<String> response = restTemplate.exchange(GET_PEOPLE + id + "/", HttpMethod.GET, getHttpEntity(), String.class);
-        log.info("response code: " +  response.getStatusCode());
-        
-        if(response.getStatusCode() == HttpStatus.MOVED_PERMANENTLY) {
-            response = getRedirect(response);
-        }
-        
-        PersonModel person;
-
         try {
+            log.info("Getting person response");
+            ResponseEntity<String> response = restTemplate.exchange(GET_PEOPLE + id + "/", HttpMethod.GET, getHttpEntity(), String.class);
+            log.info("response code: " +  response.getStatusCode());
+
+            PersonModel person;
+            
+            if(response.getStatusCode() == HttpStatus.NOT_FOUND){
+                return Optional.empty();
+            }
+            else if(response.getStatusCode() == HttpStatus.MOVED_PERMANENTLY) {
+                response = getRedirect(response);
+            }
             person = objectMapper.readValue(response.getBody(), PersonModel.class);
 
             if (person == null) {
@@ -164,10 +167,13 @@ public class PersonServiceModel implements PersonService {
 
                 return Optional.of(person);
             }
-
         } catch (JsonProcessingException e) {
             log.error(e.getMessage(), e.getCause());
             log.error("Error: GetPersons() method ");
+            return Optional.empty();
+        } catch (HttpClientErrorException e){
+            log.error(e.getMessage(), e.getCause());
+            log.error("Error 404: No such person");
             return Optional.empty();
         }
     }
@@ -198,8 +204,9 @@ public class PersonServiceModel implements PersonService {
                     return new ArrayList<>();
                 }
                 else{
-                    log.info("Mapping movie response to object:" + response.getBody());
                     movie = objectMapper.readValue(response.getBody(), MovieModel.class);
+                    movie.setReleaseDate();
+                    
                     log.info("Movie found: Adding " + movie.getTitle() + " To the list");
                     movies.add(movie);
                 }

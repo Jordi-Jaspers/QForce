@@ -22,6 +22,8 @@ public class MovieModel implements Movie {
     @JsonProperty("director")
     private String director;
     @JsonProperty("release_date")
+    private String date;
+
     private LocalDate releaseDate;
 
     /**
@@ -72,6 +74,24 @@ public class MovieModel implements Movie {
     @Override
     public String getDirector() {
         return director;
+    }
+
+    /**
+     * Convert String date to LocalDate Object
+     * 
+     * @param date the release date of the movie in string format.
+     */
+    public void setReleaseDate() {
+        this.releaseDate = LocalDate.parse(getDate());
+    }
+
+    /**
+     * Getter for the date in String value.
+     * 
+     * @return the release date in String value.
+     */
+    private String getDate() {
+        return date;
     }
 
     /**

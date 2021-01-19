@@ -69,4 +69,4 @@ The api should write analytics to a (embedded) database to keep track how many t
 * Print result in a JSON format body. -> done!
 * Transform the JSON to JAVA objects with Jackson Object mapper. -> done!
 * Create all the JAVADOC -> done!
-* Make Unit and integration tests
+* Make Unit and integration tests -> ask help?
