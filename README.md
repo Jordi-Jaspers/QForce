@@ -64,8 +64,9 @@ The api should write analytics to a (embedded) database to keep track how many t
 ## TODO list
 
 * Create models for the interface blueprints - Done!
-* Make a simple GET-request from <https://swapi.dev/> -> Doesn't completely work
+* Make a simple GET-request from <https://swapi.dev/> -> Done!
 * print out the GET-request into a log. -> done
-* Transform the JSON to JAVA objects with Jackson Object mapper.
-* Create all the JAVADOC
+* Print result in a JSON format body. -> done!
+* Transform the JSON to JAVA objects with Jackson Object mapper. -> done!
+* Create all the JAVADOC -> done!
 * Make Unit and integration tests
