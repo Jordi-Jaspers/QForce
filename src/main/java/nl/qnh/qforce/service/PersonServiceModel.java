@@ -140,7 +140,7 @@ public class PersonServiceModel implements PersonService {
      */
     private Optional<Person> getPerson(long id) {
         log.info("Getting person response");
-        ResponseEntity<String> response = restTemplate.exchange(GET_PEOPLE + id, HttpMethod.GET, getHttpEntity(), String.class);
+        ResponseEntity<String> response = restTemplate.exchange(GET_PEOPLE + id + "/", HttpMethod.GET, getHttpEntity(), String.class);
         log.info("response code: " +  response.getStatusCode());
         
         if(response.getStatusCode() == HttpStatus.MOVED_PERMANENTLY) {
