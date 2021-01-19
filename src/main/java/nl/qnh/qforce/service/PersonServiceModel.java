@@ -27,19 +27,19 @@ import nl.qnh.qforce.domain.PersonModel;
 import nl.qnh.qforce.domain.PersonModelList;
 
 /**
- * The service file is the blueprint of the methods we are providing.
- * In this class the data gets consumed from an external API and parsed into objects.
+ * The service file is the blueprint of the methods we are providing. In this
+ * class the data gets consumed from an external API and parsed into objects.
  *
  * @author Jordi
  */
 @Service
-public class PersonServiceModel implements PersonService{
+public class PersonServiceModel implements PersonService {
 
     private static final Logger log = LoggerFactory.getLogger(QforceApplication.class);
 
     private static final String GET_PEOPLE = "https://swapi.dev/api/people/";
 
-    //object mapper is used to map the JSON values into JAVA Object.
+    // object mapper is used to map the JSON values into JAVA Object.
     private final ObjectMapper objectMapper;
     private final RestTemplate restTemplate;
 
@@ -62,38 +62,39 @@ public class PersonServiceModel implements PersonService{
      */
     private List<Person> getPeople(String query) {
         log.info("Getting people response");
-        ResponseEntity<String> response = restTemplate.exchange(GET_PEOPLE, HttpMethod.GET, getHttpEntity(), String.class);
-        log.info("response: " +  response);
+        ResponseEntity<String> response = restTemplate.exchange(GET_PEOPLE, HttpMethod.GET, getHttpEntity(),
+                String.class);
+        log.info("response: " + response);
 
         List<Person> people = new ArrayList<>();
 
         try {
             PersonModelList results = objectMapper.readValue(response.getBody(), PersonModelList.class);
-            log.info("results: " +  results);
+            log.info("results: " + results);
 
-            if(results == null){
+            if (results == null) {
                 log.info("Results empty: Returning empty list");
                 return new ArrayList<>();
-            }
-            else{
-                //Using final keyword because a variable holds a constant value or a reference
+            } else {
+                // Using final keyword because a variable holds a constant value or a reference
                 for (final PersonModel person : results.getResults()) {
 
-                    //get all the characters that contain something in the query
-                    if(query != null){
+                    // get all the characters that contain something in the query
+                    if (query != null) {
                         if (query.trim().length() == 0) {
                             log.info("string only contains whitespace");
                             break;
-                        }
-                        else if (person.getName().contains(query)) {
+                        } else if (person.getName().contains(query)) {
                             log.info("Found Result: " + person.getName());
 
-                            //set the id of the person.
+                            //getting the id by splitting the url and taking the last element
+                            String str[] = person.getPersonalUrl().split("/");
+                            person.setId(Long.parseLong(str[str.length-1]));
 
+                            //setting the movies into the person
                             person.setMovies(loadMovies(person.getMoviesURL()));
                             people.add(person);
-                        }
-                        else{
+                        } else {
                             continue;
                         }
                     }
@@ -139,7 +140,7 @@ public class PersonServiceModel implements PersonService{
 
                 log.info("Adding movies from the URLs into the person object");
                 person.setMovies(loadMovies(person.getMoviesURL()));
-                
+
                 return Optional.of(person);
             }
 
@@ -199,9 +200,4 @@ public class PersonServiceModel implements PersonService{
         log.info("Creating HTTP request entity");
         return entity;
     }
-
-    private long getPersonId(){
-
-    }
-
 }
