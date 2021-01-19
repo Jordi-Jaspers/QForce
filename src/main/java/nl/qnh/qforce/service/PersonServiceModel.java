@@ -61,15 +61,16 @@ public class PersonServiceModel implements PersonService{
      * @return list of people with the query
      */
     private List<Person> getPeople(String query) {
+        log.debug("Getting people response");
         ResponseEntity<String> response = restTemplate.exchange(GET_PEOPLE, HttpMethod.GET, getHttpEntity(), String.class);
+        log.debug("response:" +  response);
 
         List<Person> people = new ArrayList<>();
         try {
-            //ERROR: what is wrong here?
             PersonModelList results = objectMapper.readValue(response.getBody(), PersonModelList.class);
 
             if(results == null){
-                //Return an empty list
+                log.debug("Results empty: Returning empty list");
                 return new ArrayList<>();
             }
             else{
@@ -114,7 +115,9 @@ public class PersonServiceModel implements PersonService{
      * @return star wars character with id
      */
     private Optional<Person> getPerson(long id) {
+        log.debug("Getting people response");
         ResponseEntity<String> response = restTemplate.exchange(GET_PEOPLE + id, HttpMethod.GET, getHttpEntity(), String.class);
+        log.debug("response:" +  response);
 
         PersonModel person;
 
@@ -122,10 +125,12 @@ public class PersonServiceModel implements PersonService{
             person = objectMapper.readValue(response.getBody(), PersonModel.class);
 
             if (person == null) {
+                log.debug("No person found: Object empty");
                 return Optional.empty();
             }
             else{
-                //adding the movie objects from the URLs into the person
+                log.debug("Person found: Correct id -> " + id);
+                log.debug("Adding movies from the URLs into the person object");
                 person.setMovies(loadMovies(person.getMoviesURL()));
                 return Optional.of(person);
             }
@@ -146,11 +151,20 @@ public class PersonServiceModel implements PersonService{
         List<Movie> movies = new ArrayList<>();
 
         for (String movieURL : movieURLs) {
+            log.debug("Getting movie response");
             ResponseEntity<String> response = restTemplate.exchange(movieURL, HttpMethod.GET, getHttpEntity(), String.class);
+            log.debug("response:" +  response);
 
             try {
-                MovieModel movie = objectMapper.readValue(response.getBody(), MovieModel.class);
-                movies.add(movie);
+                if(response == null){
+                    log.debug("No movie found: Object empty");
+                    return new ArrayList<>();
+                }
+                else{
+                    MovieModel movie = objectMapper.readValue(response.getBody(), MovieModel.class);
+                    log.debug("Movie found: Adding " + movie.getTitle() + " To the list");
+                    movies.add(movie);
+                }
             } catch (JsonProcessingException e) {
                 log.error(e.getMessage(), e.getCause());
                 log.error("Error: LoadMovies() method ");
@@ -174,6 +188,7 @@ public class PersonServiceModel implements PersonService{
         //Adding header specifics maybe?
         HttpEntity<String> entity = new HttpEntity<>("parameters", headers);
 
+        log.debug("Creating HTTP request entity");
         return entity;
     }
 
