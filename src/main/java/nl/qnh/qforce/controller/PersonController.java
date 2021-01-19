@@ -39,14 +39,14 @@ public class PersonController {
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ResponseBody
     public Optional<Person> getPerson(@PathVariable long id){
-        log.debug("received id: " + id);
+        log.info("received id: " + id);
         return personService.get(id);
     }
 
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
     public List<Person> getQuery(@RequestParam(value = "q") String query){
-        log.debug("received query: " + query);
+        log.info("received query: " + query);
         return personService.search(query);
     }
 
