@@ -80,7 +80,7 @@ public class PersonServiceModel implements PersonService {
             PersonModelList results = objectMapper.readValue(response.getBody(), PersonModelList.class);
             log.info("results: " + results.getResults());
 
-            if (results == null) {
+            if (response.getBody() == null) {
                 log.info("Results empty: Returning empty list");
                 return new ArrayList<>();
             } else {
@@ -179,7 +179,7 @@ public class PersonServiceModel implements PersonService {
             log.info("response code: " + response.getStatusCode());
 
             try {
-                if(response == null){
+                if(response.getBody() == null){
                     log.info("No movie found: Object empty");
                     return new ArrayList<>();
                 }
