@@ -20,7 +20,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import nl.qnh.qforce.QforceApplication;
 import nl.qnh.qforce.domain.Movie;
 import nl.qnh.qforce.domain.MovieModel;
 import nl.qnh.qforce.domain.Person;
@@ -36,7 +35,7 @@ import nl.qnh.qforce.domain.PersonModelList;
 @Service
 public class PersonServiceModel implements PersonService {
 
-    private static final Logger log = LoggerFactory.getLogger(QforceApplication.class);
+    private static final Logger log = LoggerFactory.getLogger(PersonServiceModel.class);
 
     private static final String GET_PEOPLE = "https://swapi.dev/api/people/";
 

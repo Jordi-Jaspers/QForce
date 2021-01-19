@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import nl.qnh.qforce.QforceApplication;
 import nl.qnh.qforce.domain.Person;
 import nl.qnh.qforce.service.PersonService;
 
@@ -29,7 +28,7 @@ public class PersonController {
 
     private PersonService personService;
 
-    private static final Logger log = LoggerFactory.getLogger(QforceApplication.class);
+    private static final Logger log = LoggerFactory.getLogger(PersonController.class);
 
     /**
      * wiring the service bean to the controller in the constructor.
