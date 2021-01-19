@@ -75,7 +75,7 @@ public class PersonServiceModel implements PersonService {
         log.info("response code: " + response.getStatusCode());
 
         if(response.getStatusCode() == HttpStatus.MOVED_PERMANENTLY) {
-            getRedirect(response);
+            response = getRedirect(response);
         }
 
         List<Person> people = new ArrayList<>();
@@ -144,7 +144,7 @@ public class PersonServiceModel implements PersonService {
         log.info("response code: " +  response.getStatusCode());
         
         if(response.getStatusCode() == HttpStatus.MOVED_PERMANENTLY) {
-            getRedirect(response);
+            response = getRedirect(response);
         }
         
         PersonModel person;
@@ -180,14 +180,16 @@ public class PersonServiceModel implements PersonService {
      */
     private List<Movie> loadMovies(List<String> movieURLs) {
         List<Movie> movies = new ArrayList<>();
+        MovieModel movie;
 
         for (String movieURL : movieURLs) {
             log.info("Getting movie response: " + movieURL);
+            
             ResponseEntity<String> response = restTemplate.exchange(movieURL, HttpMethod.GET, getHttpEntity(), String.class);
             log.info("response code: " + response.getStatusCode());
             
             if(response.getStatusCode() == HttpStatus.MOVED_PERMANENTLY) {
-                getRedirect(response);
+                response = getRedirect(response);
             }
             
             try {
@@ -196,7 +198,8 @@ public class PersonServiceModel implements PersonService {
                     return new ArrayList<>();
                 }
                 else{
-                    MovieModel movie = objectMapper.readValue(response.getBody(), MovieModel.class);
+                    log.info("Mapping movie response to object:" + response.getBody());
+                    movie = objectMapper.readValue(response.getBody(), MovieModel.class);
                     log.info("Movie found: Adding " + movie.getTitle() + " To the list");
                     movies.add(movie);
                 }
@@ -229,6 +232,8 @@ public class PersonServiceModel implements PersonService {
     private ResponseEntity<String> getRedirect(ResponseEntity<String> response){
         String redirect = response.getHeaders().getLocation().toString();
         log.info("redirecting to : " + redirect);
-        return restTemplate.exchange(redirect, HttpMethod.GET, getHttpEntity(), String.class);
+        ResponseEntity<String> tempResponse = restTemplate.exchange(redirect, HttpMethod.GET, getHttpEntity(), String.class);
+        log.info("response code: " + tempResponse.getStatusCode());
+        return tempResponse;
     }
 }

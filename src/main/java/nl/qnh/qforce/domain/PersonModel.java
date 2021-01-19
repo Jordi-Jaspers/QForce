@@ -41,7 +41,7 @@ public class PersonModel implements Person{
 
     private List<Movie> movies;
 
-     /**
+    /**
      * empty constructor for serialization.
      */
     public PersonModel() {}

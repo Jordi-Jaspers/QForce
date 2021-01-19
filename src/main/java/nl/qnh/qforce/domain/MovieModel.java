@@ -1,14 +1,18 @@
 package nl.qnh.qforce.domain;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.time.LocalDate;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 /**
  * Main Object class of movies and their attributes
  *
  * @author jordi
  */
+@JsonPropertyOrder({ "title", "episode_id", "director", "release_date"})
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class MovieModel implements Movie {
 
     @JsonProperty("title")
@@ -19,6 +23,26 @@ public class MovieModel implements Movie {
     private String director;
     @JsonProperty("release_date")
     private LocalDate releaseDate;
+
+    /**
+     * empty constructor for serialization.
+     */
+    public MovieModel() {}
+
+    /**
+     * The constructor for a movie object implemented by the movie interface.
+     * 
+     * @param title the title of the movie
+     * @param episode the episode of the series
+     * @param director the director of the movie
+     * @param releaseDate the release date if the movie
+     */
+    public MovieModel(String title, Integer episode, String director, LocalDate releaseDate) {
+        this.title = title;
+        this.episode = episode;
+        this.director = director;
+        this.releaseDate = releaseDate;
+    }
 
     /**
      * method the get the title of a movie
