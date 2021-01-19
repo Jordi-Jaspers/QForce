@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -73,6 +74,10 @@ public class PersonServiceModel implements PersonService {
         log.info("Getting people response");
         ResponseEntity<String> response = restTemplate.exchange(GET_PEOPLE, HttpMethod.GET, getHttpEntity(), String.class);
         log.info("response code: " + response.getStatusCode());
+
+        if(response.getStatusCode() == HttpStatus.MOVED_PERMANENTLY) {
+            getRedirect(response);
+        }
 
         List<Person> people = new ArrayList<>();
 
@@ -135,10 +140,14 @@ public class PersonServiceModel implements PersonService {
      * @return star wars character with id
      */
     private Optional<Person> getPerson(long id) {
-        log.info("Getting people response");
+        log.info("Getting person response");
         ResponseEntity<String> response = restTemplate.exchange(GET_PEOPLE + id, HttpMethod.GET, getHttpEntity(), String.class);
         log.info("response code: " +  response.getStatusCode());
-
+        
+        if(response.getStatusCode() == HttpStatus.MOVED_PERMANENTLY) {
+            getRedirect(response);
+        }
+        
         PersonModel person;
 
         try {
@@ -177,7 +186,11 @@ public class PersonServiceModel implements PersonService {
             log.info("Getting movie response: " + movieURL);
             ResponseEntity<String> response = restTemplate.exchange(movieURL, HttpMethod.GET, getHttpEntity(), String.class);
             log.info("response code: " + response.getStatusCode());
-
+            
+            if(response.getStatusCode() == HttpStatus.MOVED_PERMANENTLY) {
+                getRedirect(response);
+            }
+            
             try {
                 if(response.getBody() == null){
                     log.info("No movie found: Object empty");
@@ -193,7 +206,6 @@ public class PersonServiceModel implements PersonService {
                 log.error("Error: LoadMovies() method ");
                 return new ArrayList<>();
             }
-            
         }
         return movies;
     }
@@ -213,5 +225,11 @@ public class PersonServiceModel implements PersonService {
 
         log.info("Creating HTTP request entity");
         return entity;
+    }
+
+    private ResponseEntity<String> getRedirect(ResponseEntity<String> response){
+        String redirect = response.getHeaders().getLocation().toString();
+        log.info("redirecting to : " + redirect);
+        return restTemplate.exchange(redirect, HttpMethod.GET, getHttpEntity(), String.class);
     }
 }
