@@ -219,7 +219,7 @@ public class PersonServiceModel implements PersonService {
         HttpHeaders headers = new HttpHeaders();
         // set `accept` header
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-        //Adding header specifics maybe?
+
         HttpEntity<String> entity = new HttpEntity<>("parameters", headers);
 
         log.info("Creating HTTP request entity");
