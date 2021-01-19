@@ -38,6 +38,10 @@ public class PersonModel implements Person{
 
     private List<Movie> movies;
 
+     /**
+     * empty constructor for serialization.
+     */
+    public PersonModel() {}
 
     /**
      * the constructor to create these characters
@@ -69,6 +73,16 @@ public class PersonModel implements Person{
     public long getId() {
         return id;
     }
+
+    /**
+     * a setter for the id variable.
+     * 
+     * @param id the id of the person in the url path
+     */
+    public void setId(long id) {
+        this.id = id;
+    }
+    
 
     /**
      * Retuns the name of the person.

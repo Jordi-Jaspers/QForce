@@ -13,11 +13,20 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class PersonModelList {
 
     @JsonProperty("results")
-    private List<PersonModel> results;
+    private List<PersonModel> results = null;
 
+    /**
+     * No use for constructor because of serialization
+     */
     public PersonModelList() {}
-
+    
+    @JsonProperty("results")
     public List<PersonModel> getResults() {
         return results;
+    }
+
+    @JsonProperty("results")
+    public void setResults(List<PersonModel> results) {
+        this.results = results;
     }
 }
