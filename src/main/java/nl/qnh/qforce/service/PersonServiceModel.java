@@ -125,7 +125,7 @@ public class PersonServiceModel implements PersonService{
                 return Optional.empty();
             }
             else{
-                //Add the names of the movies instead of the URL's into the person class
+                //adding the movie objects from the URLs into the person
                 person.setMovies(loadMovies(person.getMoviesURL()));
                 return Optional.of(person);
             }

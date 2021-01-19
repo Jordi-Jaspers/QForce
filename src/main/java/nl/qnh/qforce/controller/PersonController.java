@@ -1,15 +1,21 @@
 package nl.qnh.qforce.controller;
-import nl.qnh.qforce.QforceApplication;
-import nl.qnh.qforce.domain.Person;
-import nl.qnh.qforce.service.PersonService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import nl.qnh.qforce.QforceApplication;
+import nl.qnh.qforce.domain.Person;
+import nl.qnh.qforce.service.PersonService;
 
 
 /**
@@ -18,7 +24,7 @@ import java.util.Optional;
  * @author jordi
  */
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/persons")
 public class PersonController {
 
     private PersonService personService;
@@ -30,20 +36,16 @@ public class PersonController {
         this.personService = personService;
     }
 
-    @RequestMapping(value = "/people", method = RequestMethod.GET)
-    public List<Person> getPeople(){
-        log.debug("received list of all people");
-        return null;
-    }
-
-    @RequestMapping(value = "/people/{id}", method = RequestMethod.GET)
-    public Optional<Person> getPerson(@PathVariable("id") long id){
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @ResponseBody
+    public Optional<Person> getPerson(@PathVariable long id){
         log.debug("received id: " + id);
         return personService.get(id);
     }
 
-    @RequestMapping(value = "/people/search={query}", method = RequestMethod.GET)
-    public List<Person> getQuery(@PathVariable("query") String query){
+    @RequestMapping(method = RequestMethod.GET)
+    @ResponseBody
+    public List<Person> getQuery(@RequestParam(value = "q") String query){
         log.debug("received query: " + query);
         return personService.search(query);
     }
