@@ -1,22 +1,19 @@
-# QForce
+# QForce (Spring Boot)
+## Biography  
 
-The QForce REST API returns Star Wars characters.
-It uses the <https://swapi.co/> to retrieve the actual Star Wars characters.
+**Authors:**  
+Jordi Jaspers [[Github](https://github.com/Jordi-Jaspers "Github Page"), [Linkedin](https://www.linkedin.com/in/jordi-jaspers/ "Linkedin Page")]  
+  
+**Date of initial commit:**  
+01/02/2021
 
-Website changed from <https://swapi.co/> to <https://swapi.dev/>
-
-## Objective
-
-Create a REST endpoint to search Star Wars characters by name or retrieve them by id.
-
-The endpoint should look like:
+**Description:**  
+A spring boot backend project where we create an API with REST endpoint to search Star Wars characters by name or retrieve them by id. The Idea is that the endpoint should look like:
 
 * Search: `/persons?q=r2`
 * Get: `/persons/{id}`
 
-The search endpoint should return a list of `Person` resources.
-
-The `Person` resource should look like:
+The search endpoint should return a list of `Person` resources. The `Person` resource should look like the following response.
 
 ```JAVA
 {
@@ -39,34 +36,24 @@ The `Person` resource should look like:
 
 ```
 
-The get endpoint should return a single `Person` resource and if the id does not exists it should return a `404`.
+The get endpoint should return a single `Person` resource and if the id does not exists it should return a `404`. The api should write analytics to a (embedded) database to keep track how many times the api is called.
 
-The api should write analytics to a (embedded) database to keep track how many times the api is called.
+The QForce REST API returns Star Wars characters.
+It uses the [QForce](https://swapi.co/, "SWAPI page") to retrieve the actual Star Wars characters.
 
-## Requirements / Objectives
-
-* Fork this project.
-* Setup a decent build environment (Maven or Gradle).
-* Use Spring framework and Spring MVC in particular. Spring Boot recommended.
-* The project should use the `nl.qnh.qforce.domain` and `nl.qnh.qforce.service` interfaces. Implementations must be developed and these interfaces may not be changed.
-* The <https://swapi.co/> must be used to retrieve the external people data.
+  
+### What We Learned
+* Setup a decent build environment Gradle
+* Use Spring framework and Spring MVC
+* Retrieving data from an external API
 * Jackson object mapper (<https://github.com/FasterXML/jackson>) should be used for marshalling and unmarshalling JSON.
-* The QForce api should return the JSON data in snake case format.
-* Unit and integration tests should be written.
-* An embedded database (e.g. H2) should be used for storing the analytics.
-* Implementation decisions need to be documented in the Javadocs.
+* Some Java Spring boot experience
+* Unit and integration tests in GROOVY language
+* Writing documentation (important)
 
-## Bugs
+### References
 
-* Get-request are not working
-* Adding header specifics maybe?
-
-## TODO list
-
-* Create models for the interface blueprints - Done!
-* Make a simple GET-request from <https://swapi.dev/> -> Done!
-* print out the GET-request into a log. -> done
-* Print result in a JSON format body. -> done!
-* Transform the JSON to JAVA objects with Jackson Object mapper. -> done!
-* Create all the JAVADOC -> done!
-* Make Unit and integration tests -> ask help?
+* Troubleshooting: <https://stackoverflow.com/>
+* Jackson object mapper: <https://github.com/FasterXML/jackson>
+* QForce API: <https://swapi.co/>
+* Spring troubleshooting: <https://www.baeldung.com/>
